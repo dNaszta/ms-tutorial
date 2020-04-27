@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  catalog-db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: catalog
+    ports:
+      - 3310:3306
+    networks:
+      - ms-tut
+
+  catalog-php:
+    build:
+      context: .
+      dockerfile: dockers/php/Dockerfile
+    volumes:
+      - "./src/catalog:/srv/app"
+    ports:
+      - "8388:80"
+    depends_on:
+      - catalog-db
+    environment:
+      DB_DATABASE: catalog
+      DB_USERNAME: root
+      DB_PASSWORD: example
+      DB_HOST: catalog-db
+      APP_URL: http://localhost:8388
+    networks:
+      - ms-tut
+
+networks:
+  ms-tut:
