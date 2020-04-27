@@ -1,6 +1,18 @@
 version: "3"
 
 services:
+  user-db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: user
+    ports:
+      - 3307:3306
+    networks:
+      - ms-tut
+
   catalog-db:
     image: mysql:5.7
     command: --default-authentication-plugin=mysql_native_password

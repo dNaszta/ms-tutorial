@@ -54,3 +54,23 @@ Create NavBar actions with bootstrap-vue and vue-router
 Create Vuex Store for actions
 Create Products view
 
+### Implement JWT
+At api-gateway
+`npm i --save @nestjs/jwt @nestjs/passport @nesjs/typeorm bcrypt class-transformer class-validator passport passport-jwt typeorm mysql`
+`nest g mo auth`
+Create new db in docker-compose
+Create typeOrmConfig
+Add `TypeOrmModule.forRoot(typeOrmConfig)` to app.module imports
+Create User entity
+Create AuthCredentialDto for Sign up and Sign in
+Create User repository for db processes
+Register User repository for Auth module
+Register PassportModule for Auth module with strategy
+Register JwtModule for Auth module with options
+`nest g s auth --no-spec`
+`nest g co auth --no-spec`
+Create JwtPayload interface for setted information
+Create JwtStrategy to implement validate for other Modules
+Implement Sign Up and Sign In functions in AuthService
+Register Sign Up and Sign In functions in AuthController
+Create GetUserDecorator middleware to validate and get user data
