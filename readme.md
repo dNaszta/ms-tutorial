@@ -74,3 +74,10 @@ Create JwtStrategy to implement validate for other Modules
 Implement Sign Up and Sign In functions in AuthService
 Register Sign Up and Sign In functions in AuthController
 Create GetUserDecorator middleware to validate and get user data
+
+Postman requests at `nest-api-gateway.postman_collection.json`
+
+### Refactor client
+Refactor Vuex to a moduled, namespaced one
+Implement client side cart
+
