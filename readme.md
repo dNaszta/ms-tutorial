@@ -81,3 +81,24 @@ Postman requests at `nest-api-gateway.postman_collection.json`
 Refactor Vuex to a moduled, namespaced one
 Implement client side cart
 
+### Create Basket service
+Create endpoint to Get Product By Id in Catalog
+Create service and controller registry in API Gateway for it
+On `http://localhost:3000/product/1` shows Product 1
+
+`composer create-project --prefer-dist laravel/lumen basket`
+`composer require predis/predis`
+`php artisan make:migration create_baskets_table`
+Create `baskets` and `basket_items` table
+`src/basket/bootstap/app.php` uncomment `$app->withFacades(); $app->withEloquent();`
+Create models for `baskets` and `basket_items` table
+`composer require guzzlehttp/guzzle` for chaining request
+Create services (Get, Patch) in routes/web.php - with chained request
+
+`docker-compose exec basket-php php artisan migrate`
+src/basket$ `chmod -R 777 storage/`
+On api-gateway `nest g s basket --no-spec` to create service for basket actions
+Register and separate user calls in controller - add `@UseGuards(AuthGuard())` and `@GetUserDecorator()` to make basket call authorized
+
+At frontend create service for basket functions
+Refactor frontend heavy logic to server/client one

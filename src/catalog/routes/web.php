@@ -14,3 +14,7 @@
 $router->get('/', function () use ($router) {
     return \App\Models\Product::all();
 });
+
+$router->get('/{id}', function ($id) use ($router) {
+    return \App\Models\Product::findOrFail($id);
+});

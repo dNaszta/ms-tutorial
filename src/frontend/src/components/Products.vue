@@ -6,7 +6,7 @@
             <ul v-else>
                 <li v-for="product in products" v-bind:key="product.id">
                     {{ product.name }} - {{ product.price }}
-                    <button @click="addProductToCart(product)">Add to cart</button>
+                    <button @click="addProductToCart(product)" v-if="isLoggedIn">Add to cart</button>
                 </li>
             </ul>
             <hr />
@@ -16,7 +16,7 @@
 
 <script>
     import Cart from "./Cart";
-    import { mapState, mapActions } from 'vuex';
+    import {mapState, mapActions, mapGetters} from 'vuex';
 
     export default {
         name: "Products",
@@ -31,6 +31,9 @@
         computed: {
             ...mapState('products', {
                 products: state => state.all
+            }),
+            ...mapGetters('account',{
+                isLoggedIn: 'isLoggedIn'
             })
         },
         methods: {

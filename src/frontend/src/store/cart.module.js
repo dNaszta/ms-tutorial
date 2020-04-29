@@ -1,3 +1,5 @@
+import { basketService } from "../services/basket.service";
+
 export default {
     namespaced: true,
     state: {
@@ -23,26 +25,23 @@ export default {
     },
 
     actions: {
-        addProductToCart({state, commit}, product) {
-            // find cart item
-            const cartItem = state.all.find(item => item.id === product.id);
-            if(!cartItem) {
-                commit('pushProductToCart', product.id)
-            } else {
-                commit('incrementItemQuantity', cartItem)
-            }
+        fetchCart({commit}) {
+            basketService.getBasket()
+                .then(
+                    data => commit('refreshCart', data.items)
+                );
+        },
+        addProductToCart({ commit }, product) {
+            basketService.addToBasket(product.id)
+                .then(
+                    data => commit('refreshCart', data.items)
+                );
         }
     },
 
     mutations: {
-        pushProductToCart(state, productId) {
-            state.all.push({
-                id: productId,
-                quantity: 1
-            })
-        },
-        incrementItemQuantity(state, cartItem) {
-            cartItem.quantity++
+        refreshCart(state, items) {
+            state.all = items;
         }
     }
 }

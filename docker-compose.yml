@@ -44,5 +44,54 @@ services:
     networks:
       - ms-tut
 
+  basket-db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: basket
+    ports:
+      - 3311:3306
+    networks:
+      - ms-tut
+
+  basket-cache:
+    image: redis:5.0-alpine
+    ports:
+      - 6379:6379
+
+  basket-php:
+    build:
+      context: .
+      dockerfile: dockers/php/Dockerfile
+    volumes:
+      - "./src/basket:/srv/app"
+    ports:
+      - "8488:80"
+    depends_on:
+      - basket-db
+      - basket-cache
+    environment:
+      DB_DATABASE: basket
+      DB_USERNAME: root
+      DB_PASSWORD: example
+      DB_HOST: basket-db
+      APP_URL: http://localhost:8488
+    networks:
+      - ms-tut
+
+  rabbitmq:
+    image: rabbitmq:3-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: example
+    ports:
+      - "5672:5672"
+
+  #basket-product-receiver:
+  #  image: python:3-alpine
+
+
 networks:
   ms-tut:
