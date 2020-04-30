@@ -35,12 +35,17 @@ services:
       - "8388:80"
     depends_on:
       - catalog-db
+      - redis
     environment:
       DB_DATABASE: catalog
       DB_USERNAME: root
       DB_PASSWORD: example
       DB_HOST: catalog-db
       APP_URL: http://localhost:8388
+      REDIS_CLIENT: predis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DATABASE: 1
     networks:
       - ms-tut
 
@@ -56,10 +61,12 @@ services:
     networks:
       - ms-tut
 
-  basket-cache:
+  redis:
     image: redis:5.0-alpine
     ports:
       - 6379:6379
+    networks:
+      - ms-tut
 
   basket-php:
     build:
@@ -71,27 +78,37 @@ services:
       - "8488:80"
     depends_on:
       - basket-db
-      - basket-cache
+      - redis
     environment:
       DB_DATABASE: basket
       DB_USERNAME: root
       DB_PASSWORD: example
       DB_HOST: basket-db
       APP_URL: http://localhost:8488
+      REDIS_CLIENT: predis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DATABASE: 0
     networks:
       - ms-tut
 
-  rabbitmq:
-    image: rabbitmq:3-alpine
+  basket-product-receiver:
+    build:
+      context: .
+      dockerfile: dockers/python-receiver/Dockerfile
     environment:
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: example
-    ports:
-      - "5672:5672"
-
-  #basket-product-receiver:
-  #  image: python:3-alpine
-
+      COLLECTION_URI: http://catalog-php/
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PS_CHANNEL: product_pubsub
+      REDIS_CACHE_NAME: product
+    volumes:
+        - "./src/basket-product-receiver/src:/app"
+    depends_on:
+      - catalog-php
+      - redis
+    networks:
+      - ms-tut
 
 networks:
   ms-tut:

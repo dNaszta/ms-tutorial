@@ -27,8 +27,12 @@ class Basket extends Model
 
         $sum = 0;
         foreach ($this->items as $item) {
-            $response = $client->request('GET', $productServer.$item->product_id);
-            $product = json_decode($response->getBody());
+            $productJson = app('redis')->get('product#'.$item->product_id);
+            if (!$productJson) {
+                $response = $client->request('GET', $productServer.$item->product_id);
+                $productJson = $response->getBody();
+            }
+            $product = json_decode($productJson);
             $sum += $product->price * $item->quantity;
             $itemArray = [
                 'id' => $item->product_id,

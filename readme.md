@@ -102,3 +102,29 @@ Register and separate user calls in controller - add `@UseGuards(AuthGuard())` a
 
 At frontend create service for basket functions
 Refactor frontend heavy logic to server/client one
+
+### Create basket product receiver
+Create pubsub receiver based on redis
+
+On basket
+`composer require predis/predis`
+`composer require illuminate/redis`
+register the `Illuminate\Redis\RedisServiceProvider::class` at `bootstrap/app.php`
+Update docker-compose to register Redis connection data
+Register Redis in `config/app.php`
+Update model to get data from Redis cache
+
+On catalog
+`composer require predis/predis`
+`composer require illuminate/redis`
+register the `Illuminate\Redis\RedisServiceProvider::class` at `bootstrap/app.php`
+Uncomment `$app->register(App\Providers\AppServiceProvider::class);`
+Update docker-compose to register Redis connection data
+Register Redis in `config/app.php`
+At AppServiceProvider register `Product::created` and `Product::updated` the `Redis::publish` method
+
+### Run
+docker-compose up
+docker-compose exec basket-php php artisan migrate
+docker-compose exec catalog-php php artisan migrate
+docker-compose run basket-product-receiver python app/receiver.py
