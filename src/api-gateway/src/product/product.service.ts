@@ -1,5 +1,4 @@
 import { HttpService, Injectable } from '@nestjs/common';
-import { map } from 'rxjs/operators';
 import { AxiosResponse } from 'axios';
 
 @Injectable()
@@ -8,10 +7,10 @@ export class ProductService {
   }
 
   getAllProduct(): Promise<AxiosResponse<any>> {
-    return this.http.get(`http://localhost:8388/`).toPromise();
+    return this.http.get(`http://catalog-php/`).toPromise();
   }
 
   getProductById(id: number): Promise<AxiosResponse<any>> {
-    return this.http.get(`http://localhost:8388/${id}`).toPromise();
+    return this.http.get(`http://catalog-php/${id}`).toPromise();
   }
 }

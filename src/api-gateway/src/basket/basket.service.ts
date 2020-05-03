@@ -8,13 +8,13 @@ export class BasketService {
 
   addToBasket(id: number, productId: number): Promise<AxiosResponse<any>> {
     return this.http.patch(
-      `http://localhost:8488/basket/user/${id}/add/${productId}`,
+      `http://basket-php/basket/user/${id}/add/${productId}`,
     ).toPromise()
   }
 
   getBasket(id: number): Promise<AxiosResponse<any>> {
     return this.http.get(
-      `http://localhost:8488/basket/user/${id}`,
+      `http://basket-php/basket/user/${id}`,
     ).toPromise()
   }
 }

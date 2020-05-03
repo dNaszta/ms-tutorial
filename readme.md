@@ -123,6 +123,8 @@ Update docker-compose to register Redis connection data
 Register Redis in `config/app.php`
 At AppServiceProvider register `Product::created` and `Product::updated` the `Redis::publish` method
 
+### Containerize api-gateway
+
 ### Run
 docker-compose up
 docker-compose exec basket-php php artisan migrate
