@@ -1,6 +1,17 @@
 version: "3"
 
 services:
+  frontend:
+    build: 
+      context: .
+      dockerfile: dockers/frontend/Dockerfile
+    ports: 
+      - 8080:80
+    networks:
+      - ms-tut
+    depends_on:
+      - api-gateway
+
   api-gateway:
     build: 
       context: .
@@ -8,8 +19,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: example
       MYSQL_DATABASE: user
-    volumes:
-      - "./src/api-gateway:/app"
     command: 
       - npm run start:dev
     ports: 
