@@ -97,6 +97,7 @@ services:
       REDIS_DATABASE: 1
     networks:
       - ms-tut
+    command: "./run.sh"
 
   basket-db:
     image: mysql:5.7
@@ -140,6 +141,7 @@ services:
       REDIS_DATABASE: 0
     networks:
       - ms-tut
+    command: "./run.sh"
 
   basket-product-receiver:
     build:
