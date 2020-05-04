@@ -17,8 +17,16 @@ services:
       context: .
       dockerfile: dockers/api-gateway/Dockerfile
     environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: user
+      NODE_ENV: production
+      RDS_CONNECTION_TYPE: postgres
+      RDS_HOSTNAME: user-db
+      RDS_USERNAME: postgres
+      RDS_PASSWORD: example
+      RDS_PORT: 5432
+      RDS_DB_NAME: user
+      JWT_SECRET: 666Ch4n61tZ3Cr3T
+      CATALOG_HTTP: catalog-php
+      BASKET_HTTP: basket-php
     ports: 
       - 3000:3000
     networks:
@@ -27,16 +35,27 @@ services:
       - user-db
 
   user-db:
-    image: mysql:5.7
-    command: --default-authentication-plugin=mysql_native_password
+    image: postgres:12-alpine
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: user
+      POSTGRES_DB: user
+      POSTGRES_PASSWORD: example
     ports:
-      - 3307:3306
+      - 5432:5432
     networks:
       - ms-tut
+  
+  #user-db:
+  #  image: mysql:5.7
+  #  command: --default-authentication-plugin=mysql_native_password
+  #  restart: always
+  #  environment:
+  #    MYSQL_ROOT_PASSWORD: example
+  #    MYSQL_DATABASE: user
+  #  ports:
+  #    - 3306:3306
+  #  networks:
+  #    - ms-tut
 
   catalog-db:
     image: mysql:5.7
