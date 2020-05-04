@@ -19,8 +19,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: example
       MYSQL_DATABASE: user
-    command: 
-      - npm run start:dev
     ports: 
       - 3000:3000
     networks:

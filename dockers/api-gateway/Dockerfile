@@ -1,4 +1,4 @@
-FROM node:14-alpine3.11
+FROM node:lts-alpine
 WORKDIR /app
 COPY src/api-gateway/ ./
 
