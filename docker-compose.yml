@@ -16,7 +16,7 @@ services:
     build: 
       context: .
       dockerfile: dockers/api-gateway/Dockerfile
-    command: ["/wait-for-it.sh", "user-db:3306", "--", "npm", "run", "start:prod"]
+    command: ["./wait-for-it.sh", "user-db:3306", "--timeout=60", "--", "npm", "run", "start:prod"]
     environment:
       NODE_ENV: production
       # RDS_CONNECTION_TYPE: postgres

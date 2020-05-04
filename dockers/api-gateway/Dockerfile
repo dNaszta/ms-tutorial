@@ -1,4 +1,6 @@
 FROM node:lts-alpine
+RUN apk add --no-cache bash
+
 WORKDIR /app
 COPY dockers/api-gateway/wait-for-it.sh ./
 COPY src/api-gateway/ ./
