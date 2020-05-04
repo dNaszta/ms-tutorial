@@ -16,13 +16,17 @@ services:
     build: 
       context: .
       dockerfile: dockers/api-gateway/Dockerfile
+    command: ["/wait-for-it.sh", "user-db:3306", "--", "npm", "run", "start:prod"]
     environment:
       NODE_ENV: production
-      RDS_CONNECTION_TYPE: postgres
+      # RDS_CONNECTION_TYPE: postgres
+      RDS_CONNECTION_TYPE: mysql
       RDS_HOSTNAME: user-db
-      RDS_USERNAME: postgres
+      # RDS_USERNAME: postgres
+      RDS_USERNAME: root
       RDS_PASSWORD: example
-      RDS_PORT: 5432
+      # RDS_PORT: 5432
+      RDS_PORT: 3306
       RDS_DB_NAME: user
       JWT_SECRET: 666Ch4n61tZ3Cr3T
       CATALOG_HTTP: catalog-php
@@ -34,28 +38,28 @@ services:
     depends_on:
       - user-db
 
-  user-db:
-    image: postgres:12-alpine
-    restart: always
-    environment:
-      POSTGRES_DB: user
-      POSTGRES_PASSWORD: example
-    ports:
-      - 5432:5432
-    networks:
-      - ms-tut
-  
   #user-db:
-  #  image: mysql:5.7
-  #  command: --default-authentication-plugin=mysql_native_password
+  #  image: postgres:12-alpine
   #  restart: always
   #  environment:
-  #    MYSQL_ROOT_PASSWORD: example
-  #    MYSQL_DATABASE: user
+  #    POSTGRES_DB: user
+  #    POSTGRES_PASSWORD: example
   #  ports:
-  #    - 3306:3306
+  #    - 5432:5432
   #  networks:
   #    - ms-tut
+  
+  user-db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: user
+    ports:
+      - 3306:3306
+    networks:
+      - ms-tut
 
   catalog-db:
     image: mysql:5.7
