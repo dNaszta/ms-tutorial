@@ -127,6 +127,6 @@ At AppServiceProvider register `Product::created` and `Product::updated` the `Re
 
 ### Run
 docker-compose up
-docker-compose exec basket-php php artisan migrate
-docker-compose exec catalog-php php artisan migrate
+docker-compose exec basket-php php artisan migrate --force
+docker-compose exec catalog-php php artisan migrate --force
 docker-compose run basket-product-receiver python app/receiver.py
