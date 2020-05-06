@@ -1,9 +1,8 @@
 db:
   host: 'localhost'
-  port: 3306
-  username: 'root'
+  port: 5432
+  username: 'postgres'
   password: 'example'
-  synchronize: true
 
 jwt:
   secret: '@@@Ch4n61t$3Cr3T'

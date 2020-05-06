@@ -1,4 +1,4 @@
-import { HttpModule, Module } from '@nestjs/common';
+import { DynamicModule, HttpModule, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { ProductService } from './product/product.service';
 import { AuthModule } from './auth/auth.module';
@@ -7,6 +7,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BasketService } from './basket/basket.service';
 import { BasketController } from './basket/basket.controller';
 import { ProductController } from './product/product.controller';
+
+export function DatabaseOrmModule(): DynamicModule {
+  // we could load the configuration from dotEnv here,
+  // but typeORM cli would not be able to find the configuration file.
+  return TypeOrmModule.forRoot(typeOrmConfig);
+}
 
 @Module({
   imports: [
