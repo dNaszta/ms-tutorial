@@ -11,24 +11,27 @@ export const typeOrmConfig: ConnectionOptions = {
   password: process.env.RDS_PASSWORD || dbConfig.password,
   database: process.env.RDS_DB_NAME || dbConfig.database,
 
-  /*
+/*
   type: 'postgres',
   host: 'localhost',
   port: 5432,
   username: 'postgres',
   password: 'example',
   database: 'user',
-  */
+*/
+
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
-  synchronize: true,
+  synchronize: false,
 
   migrationsRun: true,
   logging: true,
   logger: 'file',
-  migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+  migrations: [__dirname + '/../migrations/**/*{.ts,.js}'],
   cli: {
     // Location of migration should be inside src folder
     // to be compiled into dist/ folder.
-    migrationsDir: 'src/migrations',
+    migrationsDir: __dirname + '/../migrations',
   },
 }
+
+// module.exports = typeOrmConfig;

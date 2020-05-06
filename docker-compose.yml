@@ -16,7 +16,7 @@ services:
     build: 
       context: .
       dockerfile: dockers/api-gateway/Dockerfile
-    command: ["./wait-for-it.sh", "user-db:5432", "--timeout=600", "--", "npm", "run", "start"] # "--timeout=60", "--strict"
+    command: ["/scripts/wait-for-it.sh", "user-db:5432", "--timeout=600", "--", "npm", "run", "start:dev"] # "--timeout=60", "--strict"
     environment:
       NODE_ENV: production
       RDS_CONNECTION_TYPE: postgres
@@ -31,6 +31,9 @@ services:
       JWT_SECRET: 666Ch4n61tZ3Cr3T
       CATALOG_HTTP: catalog-php
       BASKET_HTTP: basket-php
+    volumes:
+      - "./src/api-gateway/:/app"
+      - "./dockers/api-gateway/:/scripts"
     ports: 
       - 3000:3000
     networks:

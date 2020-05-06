@@ -5,7 +5,9 @@ import * as helmet from 'helmet';
 import * as config from 'config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['log', 'error', 'warn', 'debug', 'verbose']
+  });
   app.use(helmet());
   app.enableCors();
   const serverConfig = config.get('server')

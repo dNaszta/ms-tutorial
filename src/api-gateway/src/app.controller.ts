@@ -4,6 +4,7 @@ import { Controller, Get } from '@nestjs/common';
 export class AppController {
   @Get("/test")
   GetTest() {
+    console.log("ss")
     return { "test" : null };
   }
 }
