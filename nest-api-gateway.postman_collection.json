@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "http://localhost:3000/auth/signup",
+			"name": "Sign up",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -55,15 +55,15 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:3000/auth/signin",
+			"name": "Sign in",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Content-Type",
 						"name": "Content-Type",
-						"value": "application/x-www-form-urlencoded",
-						"type": "text"
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
 					}
 				],
 				"body": {
@@ -91,25 +91,13 @@
 					"path": [
 						"auth",
 						"signin"
-					],
-					"query": [
-						{
-							"key": "username",
-							"value": "e",
-							"disabled": true
-						},
-						{
-							"key": "password",
-							"value": "Jancsika8",
-							"disabled": true
-						}
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "http://localhost:3000/auth/test",
+			"name": "Test",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -170,19 +158,15 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNTg4MjUxMjQ0LCJleHAiOjE1ODgyNTQ4NDR9.nw63kit97k9PYaPXAJ-Il1XFVgfls03aADaGRnD5D1A",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNTg4Njk0OTAyLCJleHAiOjE1ODg2OTg1MDJ9.XDIS-IBo1ml9SwdJv8pEiikc6oWW_jJxwuxpz65tWfI",
 							"type": "string"
 						}
 					]
 				},
 				"method": "PATCH",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
-					"raw": "http://localhost:3000/basket/add/1",
+					"raw": "http://localhost:3000/basket/add/1/request/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -191,6 +175,8 @@
 					"path": [
 						"basket",
 						"add",
+						"1",
+						"request",
 						"1"
 					]
 				}
@@ -212,10 +198,6 @@
 				},
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "http://localhost:3000/basket",
 					"protocol": "http",
@@ -235,10 +217,6 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "http://localhost:3000/test",
 					"protocol": "http",
@@ -258,10 +236,6 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "http://localhost:3000/product",
 					"protocol": "http",
@@ -276,5 +250,6 @@
 			},
 			"response": []
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }

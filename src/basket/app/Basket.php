@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp\Client;
+use Redis;
 
 class Basket extends Model
 {
@@ -27,7 +28,7 @@ class Basket extends Model
 
         $sum = 0;
         foreach ($this->items as $item) {
-            $productJson = app('redis')->get('product#'.$item->product_id);
+            $productJson = Redis::connection('product')->get('product#'.$item->product_id);
             if (!$productJson) {
                 $response = $client->request('GET', $productServer.$item->product_id);
                 $productJson = $response->getBody();

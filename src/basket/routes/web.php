@@ -11,8 +11,11 @@
 |
 */
 
+use App\BasketItem;
+use App\Basket;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use \Illuminate\Support\Facades\Redis;
 
 $router->get('/basket/user/{userId}', function ($userId) use ($router) {
     $result = [
@@ -31,26 +34,34 @@ $router->get('/basket/user/{userId}', function ($userId) use ($router) {
     return $basket->getBasketArray();
 });
 
-$router->patch('/basket/user/{userId}/add/{productId}', function ($userId, $productId) use ($router) {
-    $productServer = 'http://catalog-php/';
-    $client = new GuzzleHttp\Client();
-    $response = $client->request('GET', $productServer.$productId);
-    if($response->getStatusCode() != 200) {
-        abort(404);
-    }
+$router->patch('/basket/user/{userId}/add/{productId}/request/{requestId}',
+    function ($userId, $productId, $requestId) use ($router) {
+        $idempotentId = 'basket#'.$userId.'#add#'.$productId."#".$requestId;
+        $call = Redis::connection()->get($idempotentId);
 
-    $basket = \App\Basket::firstOrCreate([
-        'user_id' => $userId,
-        'basket_status' => 'active'
-    ]);
+        if(!$call) {
+            $productServer = 'http://catalog-php/';
+            $client = new GuzzleHttp\Client();
+            $response = $client->request('GET', $productServer.$productId);
+            if($response->getStatusCode() != 200) {
+                abort(404);
+            }
 
-    $item = \App\BasketItem::firstOrCreate([
-        'basket_id' => $basket->id,
-        'product_id' => $productId
-    ]);
+            $basket = Basket::firstOrCreate([
+                'user_id' => $userId,
+                'basket_status' => 'active'
+            ]);
 
-    $item->quantity += 1;
-    $item->save();
+            $item = BasketItem::firstOrCreate([
+                'basket_id' => $basket->id,
+                'product_id' => $productId
+            ]);
 
-    return $basket->getBasketArray();
+            $item->quantity += 1;
+            $item->save();
+
+            Redis::connection()->set($idempotentId, 1);
+        }
+
+        return $basket->getBasketArray();
 });

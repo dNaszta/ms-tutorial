@@ -9,9 +9,9 @@ export class BasketService {
     this.basketHttp = process.env.BASKET_HTTP || config.get('proxies.basket')
   }
 
-  addToBasket(id: number, productId: number): Promise<AxiosResponse<any>> {
+  addToBasket(id: number, productId: number, requestId: string): Promise<AxiosResponse<any>> {
     return this.http.patch(
-      `http://${this.basketHttp}/basket/user/${id}/add/${productId}`,
+      `http://${this.basketHttp}/basket/user/${id}/add/${productId}/request/${requestId}`,
     ).toPromise()
   }
 

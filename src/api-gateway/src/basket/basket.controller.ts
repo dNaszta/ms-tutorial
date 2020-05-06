@@ -23,14 +23,16 @@ export class BasketController {
     return basketRes.data;
   }
 
-  @Patch("/add/:productId")
+  @Patch("/add/:productId/request/:requestId")
   async addToBasket(
     @GetUserDecorator() user: User,
-    @Param('productId', ParseIntPipe) productId: number
+    @Param('productId', ParseIntPipe) productId: number,
+    @Param('requestId') requestId: string
   ) {
     const basketRes = await this.basketService.addToBasket(
       user.id,
-      productId);
+      productId,
+      requestId);
     return basketRes.data;
   }
 }
