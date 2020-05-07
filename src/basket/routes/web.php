@@ -13,45 +13,33 @@
 
 use App\BasketItem;
 use App\Basket;
-use Illuminate\Http\Request;
-use GuzzleHttp\Client;
-use \Illuminate\Support\Facades\Redis;
+use App\Product;
+use App\BasketFormatter;
+use \Illuminate\Support\Facades\Cache;
+use \Illuminate\Support\Carbon;
 
 $router->get('/basket/user/{userId}', function ($userId) use ($router) {
-    $result = [
-        'items' => [],
-        'summa' => 0
-    ];
-
-    $basket = \App\Basket::where('user_id', $userId)
+    $basket = Basket::where('user_id', $userId)
         ->where('basket_status', 'active')
         ->first();
 
-    if(!$basket) {
-        return $result;
-    }
-
-    return $basket->getBasketArray();
+    $result = new BasketFormatter($basket);
+    return $result->format();
 });
 
 $router->patch('/basket/user/{userId}/add/{productId}/request/{requestId}',
     function ($userId, $productId, $requestId) use ($router) {
+        $product = Product::getProductById($productId);
+
         $idempotentId = 'basket#'.$userId.'#add#'.$productId."#".$requestId;
-        $call = Redis::connection()->get($idempotentId);
+        $basket = Basket::firstOrCreate([
+            'user_id' => $userId,
+            'basket_status' => 'active'
+        ]);
+
+        $call = Cache::get($idempotentId);
 
         if(!$call) {
-            $productServer = 'http://catalog-php/';
-            $client = new GuzzleHttp\Client();
-            $response = $client->request('GET', $productServer.$productId);
-            if($response->getStatusCode() != 200) {
-                abort(404);
-            }
-
-            $basket = Basket::firstOrCreate([
-                'user_id' => $userId,
-                'basket_status' => 'active'
-            ]);
-
             $item = BasketItem::firstOrCreate([
                 'basket_id' => $basket->id,
                 'product_id' => $productId
@@ -60,8 +48,10 @@ $router->patch('/basket/user/{userId}/add/{productId}/request/{requestId}',
             $item->quantity += 1;
             $item->save();
 
-            Redis::connection()->set($idempotentId, 1);
+            $expiresAt = Carbon::now()->addMinutes(10);
+            Cache::set($idempotentId, 1, $expiresAt);
         }
 
-        return $basket->getBasketArray();
+        $result = new BasketFormatter($basket);
+        return $result->format();
 });

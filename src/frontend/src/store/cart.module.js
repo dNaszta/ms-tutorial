@@ -3,20 +3,13 @@ import { basketService } from "../services/basket.service";
 export default {
     namespaced: true,
     state: {
-        all: []
+        all: [],
+        requestId: 0
     },
 
     getters: {
-        cartProducts (state, getters, rootState) {
-            return state.all.map(cartItem => {
-                const product = rootState.products.all.find(product => product.id === cartItem.id)
-                return {
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    quantity: cartItem.quantity
-                }
-            })
+        cartProducts (state) {
+            return state.all
         },
 
         cartTotal (state, getters) {
@@ -31,8 +24,9 @@ export default {
                     data => commit('refreshCart', data.items)
                 );
         },
-        addProductToCart({ commit }, product) {
-            basketService.addToBasket(product.id)
+        addProductToCart({ state, commit }, product) {
+            commit('increment')
+            basketService.addToBasket(product.id, state.requestId)
                 .then(
                     data => commit('refreshCart', data.items)
                 );
@@ -42,6 +36,9 @@ export default {
     mutations: {
         refreshCart(state, items) {
             state.all = items;
+        },
+        increment(state) {
+            state.requestId += 1;
         }
     }
 }

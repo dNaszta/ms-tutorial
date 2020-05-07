@@ -6,7 +6,7 @@ export const basketService = {
     getBasket
 };
 
-function addToBasket(productId) {
+function addToBasket(productId, requestId) {
     const authHead = authHeader();
 
     const requestOptions = {
@@ -14,7 +14,8 @@ function addToBasket(productId) {
         headers: authHead
     };
 
-    return fetch(`http://localhost:3000/basket/add/${productId}`, requestOptions).then(handleResponse);
+    return fetch(`http://localhost:3000/basket/add/${productId}/request/${requestId}`, requestOptions)
+        .then(handleResponse);
 }
 
 function getBasket() {
